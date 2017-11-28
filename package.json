@@ -1,0 +1,21 @@
+{
+  "name": "re-stream-util",
+  "version": "0.1.0",
+  "description": "Utilities for working with Reflective stream operations",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:iteration2/re-stream-util.git"
+  },
+  "keywords": [
+    "reflective",
+    "stream",
+    "utilities"
+  ],
+  "author": "Reflective Code <code@reflective.dk>",
+  "license": "UNLICENSED",
+  "private": true,
+}
