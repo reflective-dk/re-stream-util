@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:iteration2/re-stream-util.git"
+    "url": "git://github.com/reflective-dk/re-stream-util.git"
   },
   "keywords": [
     "reflective",
