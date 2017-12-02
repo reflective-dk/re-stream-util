@@ -15,7 +15,7 @@ npm install
 npm test
 ```
 
-### Utilities ###
+### ObjectCacher ###
 
 #### new ObjectCacher(streamFactory, context) ####
 
@@ -72,18 +72,41 @@ var ObjectCacher = require('re-stream-util').ObjectCacher;
 // Using the cacher to fetch objects only once
 var cacher = new ObjectCacher(api.index.snapshot, { context: context });
 return cacher.promise(objects)
-   .then(function(result) { ... });
+    .then(function(result) { ... });
 
 // Using vanilla reflective-api
 return api.promise.index.snapshot({ context: context, objects: objects })
-   .then(function(result) { ... });
+    .then(function(result) { ... });
 ```
 
-#### unwrapper() ####
+### Chunking XML ###
 
-Creates a duplex stream that turns a string-based stream of `'{ "objects":
-[ { "id": <uuid> }, ... ] }'` into an object-based stream where each chunk is an
-object: `{ id: <uuid> }`.
+#### xmlChunker(tagName1, ..., tagNameN) ####
+
+Creates a very simple XML chunker that pushes complete nodes downstream
+as text, regardless of how they were chunked coming in.
+
+* At least one tag name is required, more than one can be specified
+* Only the specified nodes are pushed downstream
+* The specified nodes must not be nested
+
+```
+var xmlChunker = require('re-stream-util').xmlChunker;
+var xmlObjects = require('xml-objects');
+return request
+    .pipe(xmlChunker(tagName1, ..., tagNameN))
+    .pipe(xmlObjects({explicitRoot: false, explicitArray: false, mergeAttrs: true}))
+    .pipe(reStream.wrapper())
+    .pipe(response);
+```
+
+### Wrapping/Unwrapping object streams ###
+
+#### wrapper() ####
+
+Creates a duplex stream that turns an object-based stream of individual objects
+`{ id: <uuid> }` into a string-based stream of `'{ "objects":
+[ { "id": <uuid> }, ... ] }'`.
 
 ###### Usage: ######
 
@@ -96,11 +119,11 @@ return request
     .pipe(response);
 ```
 
-#### wrapper() ####
+#### unwrapper() ####
 
-Creates a duplex stream that turns an object-based stream of individual objects
-`{ id: <uuid> }` into a string-based stream of `'{ "objects":
-[ { "id": <uuid> }, ... ] }'`.
+Creates a duplex stream that turns a string-based stream of `'{ "objects":
+[ { "id": <uuid> }, ... ] }'` into an object-based stream where each chunk is an
+object: `{ id: <uuid> }`.
 
 ###### Usage: ######
 
