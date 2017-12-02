@@ -91,12 +91,12 @@ as text, regardless of how they were chunked coming in.
 * The specified nodes must not be nested
 
 ```
-var xmlChunker = require('re-stream-util').xmlChunker;
+var restream = require('re-stream-util');
 var xmlObjects = require('xml-objects');
 return request
-    .pipe(xmlChunker(tagName1, ..., tagNameN))
+    .pipe(restream.xmlChunker(tagName1, ..., tagNameN))
     .pipe(xmlObjects({explicitRoot: false, explicitArray: false, mergeAttrs: true}))
-    .pipe(reStream.wrapper())
+    .pipe(restream.wrapper())
     .pipe(response);
 ```
 
@@ -111,11 +111,11 @@ Creates a duplex stream that turns an object-based stream of individual objects
 ###### Usage: ######
 
 ```
-var reStream = require('re-stream-util');
+var restream = require('re-stream-util');
 return request
-    .pipe(reStream.unwrapper())
+    .pipe(restream.unwrapper())
     .pipe(someObjectBasedTransformation())
-    .pipe(reStream.wrapper())
+    .pipe(restream.wrapper())
     .pipe(response);
 ```
 
@@ -128,10 +128,10 @@ object: `{ id: <uuid> }`.
 ###### Usage: ######
 
 ```
-var reStream = require('re-stream-util');
+var restream = require('re-stream-util');
 return request
-    .pipe(reStream.unwrapper())
+    .pipe(restream.unwrapper())
     .pipe(someObjectBasedTransformation())
-    .pipe(reStream.wrapper())
+    .pipe(restream.wrapper())
     .pipe(response);
 ```
