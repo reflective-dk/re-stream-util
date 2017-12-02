@@ -27,6 +27,7 @@
     "through2": "^2.0.3"
   },
   "devDependencies": {
+    "bluebird": "^3.5.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1"
   }

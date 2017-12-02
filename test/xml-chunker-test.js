@@ -1,24 +1,68 @@
 "use strict";
 
+var Promise = require('bluebird');
 var chai = require('chai');
+chai.use(require('chai-as-promised'));
 var expect = chai.expect;
 var streamify = require('stream-array');
+var streamToPromise = require('stream-to-promise');
 
 var reStream = require('../index');
 
 describe('XML Chunking', function() {
-    describe('xmlChunker(tags)', function() {
-        it('should chop up an XML stream so each chunk becomes a complete element', function() {
+    describe('xmlChunker(tags)', function(done) {
+        var xmlChunker = reStream.xmlChunker;
+        it('should chop up an XML stream so each chunk becomes a complete element', function(done) {
+            expect(Promise.all([
+                run('<one></one>', '<one></one>'),
+                run('<one>|</one>', '<one></one>'),
+                run('<one></|one>', '<one></one>'),
+                run('<one></one><two></two>', '<one></one><two></two>'),
+                run('<one|>|</one><tw|o>|</two>', '<one></one><two></two>')
+            ])).notify(done);
         });
 
-        it('should only pass on elements with the specified tags', function() {
+        it('should only pass on elements with the specified tags', function(done) {
+            expect(Promise.all([
+                run('<yin></yin><one></one><yang></yang>', '<one></one>')
+            ])).notify(done);
+        });
+
+        it('should pass on elements embedded inside the specified tags', function(done) {
+            expect(Promise.all([
+                run('<one>|<another></another>|</one>', '<one><another></another></one>')
+            ])).notify(done);
+        });
+
+        it('should pass on self-closing elements', function(done) {
+            expect(Promise.all([
+                run('<one/><one /><two att="value"/>',
+                    '<one/><one /><two att="value"/>')
+            ])).notify(done);
         });
 
         it('should throw an error if no tags are specified', function() {
+            expect(function() { xmlChunker(); })
+                .to.throw('at least one XML tag must be specified');
         });
 
-        it('should throw an error if the XML elements are interleaved or nested', function() {
+        it('should throw an error if the specified XML elements are nested', function(done) {
+            expect(Promise.all([
+                expect(streamToPromise(
+                    streamify([ '<one></two>' ]).pipe(xmlChunker('one', 'two'))
+                )).to.eventually.be.rejectedWith(/nested or interleaved XML elements/),
+                expect(streamToPromise(
+                    streamify([ '<one><two></two></one>' ]).pipe(xmlChunker('one', 'two'))
+                )).to.eventually.be.rejectedWith(/nested or interleaved XML elements/)
+            ])).notify(done);
         });
+
+        function run(input, output) {
+            return expect(
+                streamToPromise(streamify(input.split('|')).pipe(xmlChunker('one', 'two')))
+                    .then(function(out) { return out.toString(); })
+            ).to.eventually.equal(output);
+        }
     });
 
     describe('openPattern(tags)', function() {
@@ -137,10 +181,10 @@ describe('XML Chunking', function() {
         });
 
         it('should return false when the tag is not self-closing', function() {
-            expect(selfClosing('')).to.equal(false);
-            expect(selfClosing('<one>')).to.equal(false);
-            expect(selfClosing('</one>')).to.equal(false);
-            expect(selfClosing('<one/ >')).to.equal(false);
+            expect(selfClosing({ tag: '' })).to.equal(false);
+            expect(selfClosing({ tag: '<one>' })).to.equal(false);
+            expect(selfClosing({ tag: '</one>' })).to.equal(false);
+            expect(selfClosing({ tag: '<one/ >' })).to.equal(false);
         });
     });
 });
