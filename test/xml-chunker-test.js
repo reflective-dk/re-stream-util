@@ -34,6 +34,15 @@ describe('XML Chunking', function() {
             ])).notify(done);
         });
 
+        it('should match on outermost element and include nested as contents', function(done) {
+            expect(Promise.all([
+                run('<one><two><inside></inside></two></one>',
+                    '<one><two><inside></inside></two></one>'),
+                run('<outside><two><one></one></two><outside>',
+                    '<two><one></one></two>')
+            ])).notify(done);
+        });
+
         it('should pass on self-closing elements', function(done) {
             expect(Promise.all([
                 run('<one/><one /><two att="value"/>',
@@ -44,17 +53,6 @@ describe('XML Chunking', function() {
         it('should throw an error if no tags are specified', function() {
             expect(function() { xmlChunker(); })
                 .to.throw('at least one XML tag must be specified');
-        });
-
-        it('should throw an error if the specified XML elements are nested', function(done) {
-            expect(Promise.all([
-                expect(streamToPromise(
-                    streamify([ '<one></two>' ]).pipe(xmlChunker('one', 'two'))
-                )).to.eventually.be.rejectedWith(/nested or interleaved XML elements/),
-                expect(streamToPromise(
-                    streamify([ '<one><two></two></one>' ]).pipe(xmlChunker('one', 'two'))
-                )).to.eventually.be.rejectedWith(/nested or interleaved XML elements/)
-            ])).notify(done);
         });
 
         function run(input, output) {
