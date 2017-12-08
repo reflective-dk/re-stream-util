@@ -100,6 +100,28 @@ return request
     .pipe(response);
 ```
 
+### Aggregating objects repeated in a stream ###
+
+#### objectAggregator(aggFn) ####
+
+Creates a stream that will collect all input before pushing any of it
+downstream. This is necessary when the same objects appear several times in the
+input stream and their contents must be aggregated.
+
+The `objectAggregator()` stream can be created without providing an aggregation
+function, in which case the default behavior collects the first registration each
+time an object is seen in the input stream.
+
+
+```
+var restream = require('re-stream-util');
+return request
+    .pipe(restream.unwrapper())
+    .pipe(restream.objectAggregator())
+    .pipe(restream.wrapper())
+    .pipe(response);
+```
+
 ### Wrapping/Unwrapping object streams ###
 
 #### wrapper() ####
