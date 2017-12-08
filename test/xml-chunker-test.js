@@ -7,11 +7,11 @@ var expect = chai.expect;
 var streamify = require('stream-array');
 var streamToPromise = require('stream-to-promise');
 
-var reStream = require('../index');
+var restream = require('../index');
 
 describe('XML Chunking', function() {
     describe('xmlChunker(tags)', function(done) {
-        var xmlChunker = reStream.xmlChunker;
+        var xmlChunker = restream.xmlChunker;
         it('should chop up an XML stream so each chunk becomes a complete element', function(done) {
             expect(Promise.all([
                 run('<one></one>', '<one></one>'),
@@ -64,7 +64,7 @@ describe('XML Chunking', function() {
     });
 
     describe('openPattern(tags)', function() {
-        var openPattern = reStream.xmlChunker.openPattern;
+        var openPattern = restream.xmlChunker.openPattern;
         it('should match one open tag of a single kind', function() {
             var pattern = openPattern([ 'one' ]);
             expect(pattern.exec('<one>')).to.deep.equal([ '<one>', 'one' ]);
@@ -114,7 +114,7 @@ describe('XML Chunking', function() {
     });
 
     describe('endPattern(tags)', function() {
-        var endPattern = reStream.xmlChunker.endPattern;
+        var endPattern = restream.xmlChunker.endPattern;
         it('should match one end tag of a single kind', function() {
             var pattern = endPattern([ 'one' ]);
             expect(pattern.exec('</one>')).to.deep.equal([ '</one>', 'one' ]);
@@ -155,8 +155,8 @@ describe('XML Chunking', function() {
     });
 
     describe('match(pattern, string)', function() {
-        var match = reStream.xmlChunker.match;
-        var pattern = reStream.xmlChunker.openPattern([ 'one' ]);
+        var match = restream.xmlChunker.match;
+        var pattern = restream.xmlChunker.openPattern([ 'one' ]);
         it('should return a match object when there is a match', function() {
             expect(match(pattern, '<one>')).to.deep.equal({
                 tag: '<one>',
@@ -171,7 +171,7 @@ describe('XML Chunking', function() {
     });
 
     describe('selfClosing(match)', function() {
-        var selfClosing = reStream.xmlChunker.selfClosing;
+        var selfClosing = restream.xmlChunker.selfClosing;
         it('should return true when the tag is self-closing', function() {
             expect(selfClosing({ tag: '<one/>' })).to.equal(true);
             expect(selfClosing({ tag: '<one />' })).to.equal(true);
