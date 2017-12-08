@@ -88,7 +88,8 @@ as text, regardless of how they were chunked coming in.
 
 * At least one tag name is required, more than one can be specified
 * Only the specified nodes are pushed downstream
-* The specified nodes must not be nested
+* If specified nodes are nested within each other, the outermost node is matched
+  and the nested nodes are simply treated as contents
 
 ```
 var restream = require('re-stream-util');
