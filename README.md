@@ -127,7 +127,7 @@ return request
 
 ### Object projection ###
 
-#### projection([ _propNames_ ]) ####
+#### projection(propName1, ..., propNameN) ####
 
 Creates an object stream that reduces the set of properties in each object to
 those specified in the argument.
@@ -139,7 +139,7 @@ those specified in the argument.
 var restream = require('re-stream-util');
 return request
     .pipe(restream.unwrapper())
-    .pipe(restream.projection([ 'id' ]))
+    .pipe(restream.projection('id'))
     .pipe(restream.wrapper())
     .pipe(response);
 ```

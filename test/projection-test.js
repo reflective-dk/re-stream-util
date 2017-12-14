@@ -9,14 +9,14 @@ var streamToPromise = require('stream-to-promise');
 var restream = require('../index');
 
 describe('projection', function() {
-    describe('projection([ <props> ])', function(done) {
+    describe('projection(propName1, ..., propNameN)', function(done) {
         it('should reduce properties of objects to specified set', function(done) {
             expect(streamToPromise(
                 streamify([
                     { a: 1, b: 'abc', c: 3 },
                     { a: 'qwe', c: 42 },
                     {}
-                ]).pipe(restream.projection([ 'b', 'c' ]))))
+                ]).pipe(restream.projection('b', 'c'))))
                 .to.eventually.deep.equal([
                     { b: 'abc', c: 3 },
                     { c: 42 },
