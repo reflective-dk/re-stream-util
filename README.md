@@ -114,11 +114,32 @@ function, in which case the default behavior collects the first registration eac
 time an object is seen in the input stream.
 
 
+###### Usage: ######
+
 ```
 var restream = require('re-stream-util');
 return request
     .pipe(restream.unwrapper())
     .pipe(restream.objectAggregator())
+    .pipe(restream.wrapper())
+    .pipe(response);
+```
+
+### Object projection ###
+
+#### projection([ _propNames_ ]) ####
+
+Creates an object stream that reduces the set of properties in each object to
+those specified in the argument.
+
+###### Usage: ######
+
+```
+// Keeps only the 'id' of each object in the stream
+var restream = require('re-stream-util');
+return request
+    .pipe(restream.unwrapper())
+    .pipe(restream.projection([ 'id' ]))
     .pipe(restream.wrapper())
     .pipe(response);
 ```
