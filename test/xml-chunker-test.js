@@ -111,6 +111,12 @@ describe('XML Chunking', function() {
             expect(pattern.test('</two>')).to.equal(false);
             expect(pattern.test('</one></two>')).to.equal(false);
         });
+
+        it('should not match longer tags where a specified tag is a prefix', function() {
+            var pattern = openPattern([ 'one', 'two' ]);
+            expect(pattern.test('<ones>')).to.equal(false);
+            expect(pattern.test('<onetwo>')).to.equal(false);
+        });
     });
 
     describe('endPattern(tags)', function() {
@@ -151,6 +157,12 @@ describe('XML Chunking', function() {
             var pattern = endPattern([ 'one', 'two' ]);
             expect(pattern.test('<one>')).to.equal(false);
             expect(pattern.test('<one><two>')).to.equal(false);
+        });
+
+        it('should not match longer tags where a specified tag is a prefix', function() {
+            var pattern = endPattern([ 'one', 'two' ]);
+            expect(pattern.test('</ones>')).to.equal(false);
+            expect(pattern.test('</onetwo>')).to.equal(false);
         });
     });
 
