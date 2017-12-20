@@ -7,6 +7,7 @@ var objectAggregator = require('./lib/object-aggregator');
 var projection = require('./lib/projection');
 var logger = require('./lib/logger');
 var regexpChunker = require('./lib/regexp-chunker');
+var splitChunker = require('./lib/split-chunker');
 
 module.exports = {
     ObjectCacher: ObjectCacher,
@@ -14,6 +15,7 @@ module.exports = {
     unwrapper: wrap.unwrapper,
     xmlChunker: xmlChunker,
     regexpChunker: regexpChunker,
+    splitChunker: splitChunker,
     objectAggregator: objectAggregator,
     projection: projection,
     logger: logger
