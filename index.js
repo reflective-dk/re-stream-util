@@ -8,6 +8,7 @@ var projection = require('./lib/projection');
 var logger = require('./lib/logger');
 var regexpChunker = require('./lib/regexp-chunker');
 var splitChunker = require('./lib/split-chunker');
+var streamModeHandlers = require('./lib/stream-mode-handlers');
 
 module.exports = {
     ObjectCacher: ObjectCacher,
@@ -17,6 +18,8 @@ module.exports = {
     regexpChunker: regexpChunker,
     splitChunker: splitChunker,
     objectAggregator: objectAggregator,
+    objectToStringStream: streamModeHandlers.objectToStringStream,
+    objectToObjectStream: streamModeHandlers.objectToObjectStream,
     projection: projection,
     logger: logger
 };
