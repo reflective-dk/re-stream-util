@@ -2,6 +2,7 @@
 
 var ObjectCacher = require('./lib/object-cacher');
 var wrap = require('./lib/wrap');
+var wrapToArray = require('./lib/wrap-to-array');
 var xmlChunker = require('./lib/xml-chunker');
 var objectAggregator = require('./lib/object-aggregator');
 var projection = require('./lib/projection');
@@ -13,6 +14,7 @@ var streamModeHandlers = require('./lib/stream-mode-handlers');
 module.exports = {
     ObjectCacher: ObjectCacher,
     wrapper: wrap.wrapper,
+    wrapToArray: wrapToArray,
     unwrapper: wrap.unwrapper,
     xmlChunker: xmlChunker,
     regexpChunker: regexpChunker,
