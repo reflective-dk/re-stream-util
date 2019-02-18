@@ -20,6 +20,7 @@
   "private": true,
   "dependencies": {
     "JSONStream": "^1.3.1",
+    "lodash": "^4.17.11",
     "pumpify": "^1.3.5",
     "stream-array": "^1.1.2",
     "stream-to-promise": "^2.2.0",
@@ -29,7 +30,6 @@
   "devDependencies": {
     "bluebird": "^3.5.1",
     "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
-    "lodash": "^4.17.5"
+    "chai-as-promised": "^7.1.1"
   }
 }
