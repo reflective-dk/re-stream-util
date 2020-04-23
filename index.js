@@ -10,6 +10,7 @@ var logger = require('./lib/logger');
 var regexpChunker = require('./lib/regexp-chunker');
 var splitChunker = require('./lib/split-chunker');
 var streamModeHandlers = require('./lib/stream-mode-handlers');
+var stringToStream = require('./lib/string-to-stream');
 
 module.exports = {
     ObjectCacher: ObjectCacher,
@@ -23,5 +24,6 @@ module.exports = {
     objectToStringStream: streamModeHandlers.objectToStringStream,
     objectToObjectStream: streamModeHandlers.objectToObjectStream,
     projection: projection,
-    logger: logger
+    logger: logger,
+    stringToStream: stringToStream
 };
