@@ -6,6 +6,7 @@ chai.use(require('chai-as-promised'));
 var expect = chai.expect;
 var streamify = require('stream-array');
 var streamToPromise = require('stream-to-promise');
+var through2 = require('through2');
 
 var restream = require('../index');
 
@@ -14,48 +15,50 @@ describe('XML Chunking', function() {
         var xmlChunker = restream.xmlChunker;
         it('should chop up an XML stream so each chunk becomes a complete element', function(done) {
             expect(Promise.all([
-                run('<one></one>', '<one></one>'),
-                run('<one>|</one>', '<one></one>'),
-                run('<one></|one>', '<one></one>'),
-                run('<one></one><two></two>', '<one></one><two></two>'),
-                run('<one|>|</one><tw|o>|</two>', '<one></one><two></two>')
+                run('<one></one>', [ '<one></one>' ]),
+                run('<one>|</one>', [ '<one></one>' ]),
+                run('<one></|one>', [ '<one></one>' ]),
+                run('<one></one><two></two>', [ '<one></one>', '<two></two>' ]),
+                run('<one|>|</one><tw|o>|</two>', [ '<one></one>', '<two></two>' ])
             ])).notify(done);
         });
 
         it('should only pass on elements with the specified tags', function(done) {
             expect(Promise.all([
-                run('<yin></yin><one></one><yang></yang>', '<one></one>')
+                run('<yin></yin><one></one><yang></yang>', [ '<one></one>' ])
             ])).notify(done);
         });
 
         it('should pass on elements embedded inside the specified tags', function(done) {
             expect(Promise.all([
-                run('<one>|<another></another>|</one>', '<one><another></another></one>')
+                run('<one>|<another></another>|</one>', [ '<one><another></another></one>' ])
             ])).notify(done);
         });
 
         it('should match on outermost element and include nested as contents', function(done) {
             expect(Promise.all([
                 run('<one><two><inside></inside></two></one>',
-                    '<one><two><inside></inside></two></one>'),
+                    [ '<one><two><inside></inside></two></one>' ]),
                 run('<outside><two><one></one></two><outside>',
-                    '<two><one></one></two>')
+                    [ '<two><one></one></two>' ])
             ])).notify(done);
         });
 
         it('should allow nested elements of same type as contents', function(done) {
             expect(Promise.all([
                 run('<one><one><inside></inside></one></one>',
-                    '<one><one><inside></inside></one></one>'),
+                    [ '<one><one><inside></inside></one></one>' ]),
+                run('<one><fee/><one><fi/><one><fo/><one><fum/></one></one></one></one>',
+                    [ '<one><fee/><one><fi/><one><fo/><one><fum/></one></one></one></one>' ]),
                 run('<outside><one><one></one></one><outside>',
-                    '<one><one></one></one>')
+                    [ '<one><one></one></one>' ])
             ])).notify(done);
         });
 
         it('should pass on self-closing elements', function(done) {
             expect(Promise.all([
                 run('<one/><one /><two att="value"/>',
-                    '<one/><one /><two att="value"/>')
+                    [ '<one/>', '<one />', '<two att="value"/>' ])
             ])).notify(done);
         });
 
@@ -64,12 +67,14 @@ describe('XML Chunking', function() {
                 .to.throw('at least one XML tag must be specified');
         });
 
-        function run(input, output) {
-            return expect(
-                streamToPromise(streamify(input.split('|')).pipe(xmlChunker('one', 'two')))
-                    .then(function(out) { return out.toString(); })
-            ).to.eventually.equal(output);
-        }
+      function run(input, output) {
+          var chunks = [];
+        return expect(Promise.resolve(streamToPromise(
+          streamify(input.split('|'))
+            .pipe(xmlChunker('one', 'two'))
+            .pipe(through2.obj((c, e, callback) => callback(null, c.toString())))
+        ))).to.eventually.deep.equal(output);
+      }
     });
 
     describe('openPattern(tags)', function() {
