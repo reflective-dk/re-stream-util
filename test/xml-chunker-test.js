@@ -48,6 +48,10 @@ describe('XML Chunking', function() {
             expect(Promise.all([
                 run('<one><one><inside></inside></one></one>',
                     [ '<one><one><inside></inside></one></one>' ]),
+                run('<one></one><one><one><inside></inside></one></one>',
+                    [ '<one></one>', '<one><one><inside></inside></one></one>' ]),
+                run('<one><one></one><one><inside></inside></one></one><one></one>',
+                    [ '<one><one></one><one><inside></inside></one></one>', '<one></one>' ]),
                 run('<one><fee/><one><fi/><one><fo/><one><fum/></one></one></one></one>',
                     [ '<one><fee/><one><fi/><one><fo/><one><fum/></one></one></one></one>' ]),
                 run('<outside><one><one></one></one><outside>',
