@@ -43,6 +43,15 @@ describe('XML Chunking', function() {
             ])).notify(done);
         });
 
+        it('should allow nested elements of same type as contents', function(done) {
+            expect(Promise.all([
+                run('<one><one><inside></inside></one></one>',
+                    '<one><one><inside></inside></one></one>'),
+                run('<outside><one><one></one></one><outside>',
+                    '<one><one></one></one>')
+            ])).notify(done);
+        });
+
         it('should pass on self-closing elements', function(done) {
             expect(Promise.all([
                 run('<one/><one /><two att="value"/>',
