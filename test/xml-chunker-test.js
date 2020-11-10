@@ -54,6 +54,11 @@ describe('XML Chunking', function() {
                     [ '<one><one></one><one><inside></inside></one></one>', '<one></one>' ]),
                 run('<one><fee/><one><fi/><one><fo/><one><fum/></one></one></one></one>',
                     [ '<one><fee/><one><fi/><one><fo/><one><fum/></one></one></one></one>' ]),
+                run('<one><fee/><one><fi/><one><fo/><one><fum/></one><one><fum/></one></one></one></one>',
+                    [ '<one><fee/><one><fi/><one><fo/><one><fum/></one><one><fum/></one></one></one></one>' ]),
+              run(oneLineNestedXml(),
+                  [ /<sd:Profession>[\s\S]+<\/sd:Profession>/.exec(oneLineNestedXml())[0] ],
+                  [ 'Profession' ]),
                 run('<outside><one><one></one></one><outside>',
                     [ '<one><one></one></one>' ])
             ])).notify(done);
@@ -71,13 +76,57 @@ describe('XML Chunking', function() {
                 .to.throw('at least one XML tag must be specified');
         });
 
-      function run(input, output) {
-          var chunks = [];
+      function run(input, output, tags) {
+        tags = tags || [ 'one', 'two' ];
+        var chunks = [];
         return expect(Promise.resolve(streamToPromise(
           streamify(input.split('|'))
-            .pipe(xmlChunker('one', 'two'))
+            .pipe(xmlChunker.apply(null, tags))
             .pipe(through2.obj((c, e, callback) => callback(null, c.toString())))
         ))).to.eventually.deep.equal(output);
+      }
+
+      function oneLineNestedXml() {
+        return '<?xml version="1.0" encoding="UTF-8"?>\
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\
+  <soapenv:Body>\
+    <sd:GetProfession20080201 xmlns:sd="http://rep.oio.dk/sd.dk/xml.schema/20080201/" xsi:schemaLocation="http://rep.oio.dk/sd.dk/xml.schema/20080201/ https://service.sd.dk/sdws/xml/schema/sd.dk/xml.schema/20080201/SD_GetProfessionInterface.xsd" xmlns:sd20070301="http://rep.oio.dk/sd.dk/xml.schema/20070301/" xmlns:sd20070401="http://rep.oio.dk/sd.dk/xml.schema/20070401/" creationTime="2020-09-29T10:42:51">\
+      <sd:RequestKey>\
+        <sd20070301:InstitutionIdentifier>TS</sd20070301:InstitutionIdentifier>\
+      </sd:RequestKey>\
+      <sd:Profession>\
+        <sd:JobPositionIdentifier>1002</sd:JobPositionIdentifier>\
+        <sd:JobPositionName>Pers. U. ledel</sd:JobPositionName>\
+        <sd:JobPositionLevelCode>3</sd:JobPositionLevelCode>\
+        <sd:Profession>\
+          <sd:JobPositionIdentifier>1400</sd:JobPositionIdentifier>\
+          <sd:JobPositionName>Øvrigt pers.</sd:JobPositionName>\
+          <sd:JobPositionLevelCode>2</sd:JobPositionLevelCode>\
+          <sd:Profession>\
+            <sd:JobPositionIdentifier>6101</sd:JobPositionIdentifier>\
+            <sd:JobPositionName>61.01 PædMedhj</sd:JobPositionName>\
+            <sd:JobPositionLevelCode>1</sd:JobPositionLevelCode>\
+            <sd:Profession>\
+              <sd:JobPositionIdentifier>7040</sd:JobPositionIdentifier>\
+              <sd:JobPositionName>Børnhvkl.medhj</sd:JobPositionName>\
+              <sd:JobPositionLevelCode>0</sd:JobPositionLevelCode>\
+            </sd:Profession>\
+            <sd:Profession>\
+              <sd:JobPositionIdentifier>7070</sd:JobPositionIdentifier>\
+              <sd:JobPositionName>Pæd.medhjælper</sd:JobPositionName>\
+              <sd:JobPositionLevelCode>0</sd:JobPositionLevelCode>\
+            </sd:Profession>\
+            <sd:Profession>\
+              <sd:JobPositionIdentifier>7075</sd:JobPositionIdentifier>\
+              <sd:JobPositionName>Pæd. assistent</sd:JobPositionName>\
+              <sd:JobPositionLevelCode>0</sd:JobPositionLevelCode>\
+            </sd:Profession>\
+          </sd:Profession>\
+        </sd:Profession>\
+      </sd:Profession>\
+    </sd:GetProfession20080201>\
+  </soapenv:Body>\
+</soapenv:Envelope>';
       }
     });
 
