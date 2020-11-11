@@ -130,25 +130,26 @@ describe('XML Chunking', function() {
 </soapenv:Envelope>';
       }
 
+      // This XML deliberately misses two close tags, and has a number of splits '|'
+      // to create multiple chunks in order to test proper behavior of nested counting
       function invalidNestedXml() {
           return '<sd:Profession>\n\
         <sd:JobPositionIdentifier>1001</sd:JobPositionIdentifier>\n\
-        <sd:JobPositionName>Ledere</sd:JobPositionName>\n\
+      | <sd:JobPositionName>Ledere</sd:JobPositionName>\n\
         <sd:JobPositionLevelCode>3</sd:JobPositionLevelCode>\n\
         <sd:Profession>\n\
           <sd:JobPositionIdentifier>1100</sd:JobPositionIdentifier>\n\
-          <sd:JobPositionName>Kommunaldirek.</sd:JobPositionName>\n\
+      |   <sd:JobPositionName>Kommunaldirek.</sd:JobPositionName>\n\
           <sd:JobPositionLevelCode>2</sd:JobPositionLevelCode>\n\
           <sd:Profession>\n\
             <sd:JobPositionIdentifier>3001</sd:JobPositionIdentifier>\n\
-            <sd:JobPositionName>30.01 Chefaft.</sd:JobPositionName>\n\
+      |     <sd:JobPositionName>30.01 Chefaft.</sd:JobPositionName>\n\
             <sd:JobPositionLevelCode>1</sd:JobPositionLevelCode>\n\
             <sd:Profession>\n\
               <sd:JobPositionIdentifier>3335</sd:JobPositionIdentifier>\n\
-              <sd:JobPositionName>Kommunal.dir.</sd:JobPositionName>\n\
+      |       <sd:JobPositionName>Kommunal.dir.</sd:JobPositionName>\n\
               <sd:JobPositionLevelCode>0</sd:JobPositionLevelCode>\n\
             </sd:Profession>\n';
-        // Deliberately missing two close tags
       }
     });
 
