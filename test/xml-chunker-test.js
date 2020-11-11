@@ -56,9 +56,10 @@ describe('XML Chunking', function() {
                     [ '<one><fee/><one><fi/><one><fo/><one><fum/></one></one></one></one>' ]),
                 run('<one><fee/><one><fi/><one><fo/><one><fum/></one><one><fum/></one></one></one></one>',
                     [ '<one><fee/><one><fi/><one><fo/><one><fum/></one><one><fum/></one></one></one></one>' ]),
-              run(oneLineNestedXml(),
-                  [ /<sd:Profession>[\s\S]+<\/sd:Profession>/.exec(oneLineNestedXml())[0] ],
-                  [ 'Profession' ]),
+                run(oneLineNestedXml(),
+                    [ /<sd:Profession>[\s\S]+<\/sd:Profession>/.exec(oneLineNestedXml())[0] ],
+                    [ 'Profession' ]),
+                run(invalidNestedXml(), [], [ 'Profession' ]),
                 run('<outside><one><one></one></one><outside>',
                     [ '<one><one></one></one>' ])
             ])).notify(done);
@@ -127,6 +128,27 @@ describe('XML Chunking', function() {
     </sd:GetProfession20080201>\
   </soapenv:Body>\
 </soapenv:Envelope>';
+      }
+
+      function invalidNestedXml() {
+          return '<sd:Profession>\n\
+        <sd:JobPositionIdentifier>1001</sd:JobPositionIdentifier>\n\
+        <sd:JobPositionName>Ledere</sd:JobPositionName>\n\
+        <sd:JobPositionLevelCode>3</sd:JobPositionLevelCode>\n\
+        <sd:Profession>\n\
+          <sd:JobPositionIdentifier>1100</sd:JobPositionIdentifier>\n\
+          <sd:JobPositionName>Kommunaldirek.</sd:JobPositionName>\n\
+          <sd:JobPositionLevelCode>2</sd:JobPositionLevelCode>\n\
+          <sd:Profession>\n\
+            <sd:JobPositionIdentifier>3001</sd:JobPositionIdentifier>\n\
+            <sd:JobPositionName>30.01 Chefaft.</sd:JobPositionName>\n\
+            <sd:JobPositionLevelCode>1</sd:JobPositionLevelCode>\n\
+            <sd:Profession>\n\
+              <sd:JobPositionIdentifier>3335</sd:JobPositionIdentifier>\n\
+              <sd:JobPositionName>Kommunal.dir.</sd:JobPositionName>\n\
+              <sd:JobPositionLevelCode>0</sd:JobPositionLevelCode>\n\
+            </sd:Profession>\n';
+        // Deliberately missing two close tags
       }
     });
 
