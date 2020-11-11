@@ -1,0 +1,42 @@
+<sd:Profession>
+  <sd:JobPositionIdentifier>1001</sd:JobPositionIdentifier>
+  <sd:JobPositionName>Ledere</sd:JobPositionName>
+  <sd:JobPositionLevelCode>3</sd:JobPositionLevelCode>
+  <sd:Profession>
+    <sd:JobPositionIdentifier>1300</sd:JobPositionIdentifier>
+    <sd:JobPositionName>Afdelingsleder</sd:JobPositionName>
+    <sd:JobPositionLevelCode>2</sd:JobPositionLevelCode>
+    <sd:Profession>
+      <sd:JobPositionIdentifier>4161</sd:JobPositionIdentifier>
+      <sd:JobPositionName>41.61 Hal-insp</sd:JobPositionName>
+      <sd:JobPositionLevelCode>1</sd:JobPositionLevelCode>
+    </sd:Profession>
+    <sd:Profession>
+      <sd:JobPositionIdentifier>5081</sd:JobPositionIdentifier>
+      <sd:JobPositionName>
+      </sd:JobPositionName>
+      <sd:JobPositionLevelCode>1</sd:JobPositionLevelCode>|
+    </sd:Profession>
+    <sd:Profession>
+      <sd:JobPositionIdentifier>7301</sd:JobPositionIdentifier>
+      <sd:JobPositionName>73.01 Soc.Sund</sd:JobPositionName>
+      <sd:JobPositionLevelCode>1</sd:JobPositionLevelCode>
+      <sd:Profession>
+        <sd:JobPositionIdentifier>7705</sd:JobPositionIdentifier>
+        <sd:JobPositionName>Daglig Led.L/A</sd:JobPositionName>
+        <sd:JobPositionLevelCode>0</sd:JobPositionLevelCode>
+      </sd:Profession>
+      <sd:Profession>
+        <sd:JobPositionIdentifier>7707</sd:JobPositionIdentifier>
+        <sd:JobPositionName>Stedfortræder</sd:JobPositionName>
+        <sd:JobPositionLevelCode>0</sd:JobPositionLevelCode>
+      </sd:Profession>
+    </sd:Profession>
+    <sd:Profession>
+      <sd:JobPositionIdentifier>7601</sd:JobPositionIdentifier>
+      <sd:JobPositionName>76.01 Ergotera</sd:JobPositionName>
+      <sd:JobPositionLevelCode>1</sd:JobPositionLevelCode>
+      <sd:Profession>
+        <sd:JobPositionIdentifier>8001</sd:JobPositionIdentifier>
+        <sd:JobPositionName>Afdelingsleder</sd:JobPositionName>
+        <sd:JobPos

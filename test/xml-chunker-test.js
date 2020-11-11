@@ -1,5 +1,7 @@
 "use strict";
 
+var fs = require('fs');
+var path = require('path');
 var Promise = require('bluebird');
 var chai = require('chai');
 chai.use(require('chai-as-promised'));
@@ -10,6 +12,9 @@ var through2 = require('through2');
 
 var restream = require('../index');
 
+var chunkedIncompleteXml = fs.readFileSync(
+  path.join(__dirname, '..', 'test-data', 'chunked-incomplete-job-positions.xml'),
+  'utf8');
 describe('XML Chunking', function() {
     describe('xmlChunker(tags)', function(done) {
         var xmlChunker = restream.xmlChunker;
@@ -59,6 +64,7 @@ describe('XML Chunking', function() {
                 run(oneLineNestedXml(),
                     [ /<sd:Profession>[\s\S]+<\/sd:Profession>/.exec(oneLineNestedXml())[0] ],
                     [ 'Profession' ]),
+                run(chunkedIncompleteXml, [], [ 'Profession' ]),
                 run(invalidNestedXml(), [], [ 'Profession' ]),
                 run('<outside><one><one></one></one><outside>',
                     [ '<one><one></one></one>' ])
