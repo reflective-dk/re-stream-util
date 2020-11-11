@@ -1,0 +1,14 @@
+      <sd:Profession>
+        <sd:JobPositionIdentifier>1001</sd:JobPositionIdentifier>
+        <sd:JobPositionName>Ledere</sd:JobPositionName>
+        <sd:JobPositionLevelCode>3</sd:JobPositionLevelCode>
+        <sd:Profession>
+          <sd:JobPositionIdentifier>1203</sd:JobPositionIdenti|fier>
+          <sd:JobPositionName>C.chef-Driftby</sd:JobPositionName>
+          <sd:JobPositionLevelCode>2</sd:JobPositionLevelCode>
+        </sd:Profession>
+        <sd:Profession>
+          <sd:JobPositionIdentifier>1214</sd:JobPositionIdentifier>
+          <sd:JobPositionName>C.chef-ØAC</sd:JobPositionName>
+          <sd:JobPositionLevelCode>2</sd:JobPositionLevelCode>
+        </sd:Profession>

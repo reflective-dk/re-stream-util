@@ -15,6 +15,9 @@ var restream = require('../index');
 var chunkedIncompleteXml = fs.readFileSync(
   path.join(__dirname, '..', 'test-data', 'chunked-incomplete-job-positions.xml'),
   'utf8');
+var chunkedIncompleteXml2 = fs.readFileSync(
+  path.join(__dirname, '..', 'test-data', 'chunked-incomplete-job-positions2.xml'),
+  'utf8');
 describe('XML Chunking', function() {
     describe('xmlChunker(tags)', function(done) {
         var xmlChunker = restream.xmlChunker;
@@ -65,6 +68,7 @@ describe('XML Chunking', function() {
                     [ /<sd:Profession>[\s\S]+<\/sd:Profession>/.exec(oneLineNestedXml())[0] ],
                     [ 'Profession' ]),
                 run(chunkedIncompleteXml, [], [ 'Profession' ]),
+                run(chunkedIncompleteXml2, [], [ 'Profession' ]),
                 run(invalidNestedXml(), [], [ 'Profession' ]),
                 run('<outside><one><one></one></one><outside>',
                     [ '<one><one></one></one>' ])
