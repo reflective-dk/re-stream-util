@@ -18,6 +18,9 @@ var chunkedIncompleteXml = fs.readFileSync(
 var chunkedIncompleteXml2 = fs.readFileSync(
   path.join(__dirname, '..', 'test-data', 'chunked-incomplete-job-positions2.xml'),
   'utf8');
+var completeSoapResponse = fs.readFileSync(
+  path.join(__dirname, '..', 'test-data', 'SOAP_Profession.xml'),
+  'utf8');
 describe('XML Chunking', function() {
     describe('xmlChunker(tags)', function(done) {
         var xmlChunker = restream.xmlChunker;
@@ -69,6 +72,7 @@ describe('XML Chunking', function() {
                     [ 'Profession' ]),
                 run(chunkedIncompleteXml, [], [ 'Profession' ]),
                 run(chunkedIncompleteXml2, [], [ 'Profession' ]),
+                run(completeSoapResponse, 104, [ 'Profession' ], r => r.length),
                 run(invalidNestedXml(), [], [ 'Profession' ]),
                 run('<outside><one><one></one></one><outside>',
                     [ '<one><one></one></one>' ])
@@ -87,14 +91,15 @@ describe('XML Chunking', function() {
                 .to.throw('at least one XML tag must be specified');
         });
 
-      function run(input, output, tags) {
+      function run(input, output, tags, then) {
+        then = then || (r => r);
         tags = tags || [ 'one', 'two' ];
         var chunks = [];
         return expect(Promise.resolve(streamToPromise(
           streamify(input.split('|'))
             .pipe(xmlChunker.apply(null, tags))
             .pipe(through2.obj((c, e, callback) => callback(null, c.toString())))
-        ))).to.eventually.deep.equal(output);
+        )).then(then)).to.eventually.deep.equal(output);
       }
 
       function oneLineNestedXml() {
