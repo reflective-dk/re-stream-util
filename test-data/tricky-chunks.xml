@@ -1,0 +1,12 @@
+o     <sd:Profession>
+        <sd:JobPositionIdentifier>9888</sd:JobPositionIdentifier>
+e     </sd:Profession>
+n     <sd:Profession>
+        <sd:JobPositionIdentifier>1001</sd:JobPositionIdentifier>
+        <sd:Profession>
+          <s|d:JobPositionIdentifier>7530</sd:JobPositionIdentifier>
+        </sd:Profession>
+      </sd:Profession>
+      <sd:Profession>
+        <sd:JobPositionIdentifier>1002</sd:JobPositionIdentifier>
+      </sd:Profession>

@@ -21,6 +21,9 @@ var chunkedIncompleteXml2 = fs.readFileSync(
 var completeSoapResponse = fs.readFileSync(
   path.join(__dirname, '..', 'test-data', 'SOAP_Profession.xml'),
   'utf8');
+var trickyChunks = fs.readFileSync(
+  path.join(__dirname, '..', 'test-data', 'tricky-chunks.xml'),
+  'utf8');
 describe('XML Chunking', function() {
     describe('xmlChunker(tags)', function(done) {
         var xmlChunker = restream.xmlChunker;
@@ -74,9 +77,19 @@ describe('XML Chunking', function() {
                 run(chunkedIncompleteXml2, [], [ 'Profession' ]),
                 run(completeSoapResponse, 104, [ 'Profession' ], r => r.length),
                 run(invalidNestedXml(), [], [ 'Profession' ]),
+                run(trickyChunks, 3, [ 'Profession' ], r => r.length),
                 run('<outside><one><one></one></one><outside>',
                     [ '<one><one></one></one>' ])
             ])).notify(done);
+        });
+
+        it('should allow nested elements in a long file', function(done) {
+          var xml = fs.createReadStream('test-data/SOAP_Profession.xml');
+          expect(Promise.resolve(streamToPromise(
+            xml.pipe(xmlChunker.apply(null, [ 'Profession' ]))
+              .pipe(through2.obj((c, e, callback) => callback(null, c.toString())))
+          ))).to.eventually.have.lengthOf(104)
+            .notify(done);
         });
 
         it('should pass on self-closing elements', function(done) {
