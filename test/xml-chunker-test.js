@@ -39,8 +39,20 @@ describe('XML Chunking', function() {
 
         it('should only pass on elements with the specified tags', function(done) {
             expect(Promise.all([
-                run('<yin></yin><one></one><yang></yang>', [ '<one></one>' ])
+                run('<one></one>', [ '<one></one>' ])
             ])).notify(done);
+        });
+
+        it('should support multibyte characters across chunk boundaries', function(done) {
+          // Multibyte: 'æ' = c3 a6
+          // <one>0xc3|0xa6</one> => <one>æ</one>
+          var chunk1 = Buffer.concat([ Buffer.from('<one>'), Buffer.from([ 0xc3 ]) ]);
+          var chunk2 = Buffer.concat([ Buffer.from([ 0xa6 ]), Buffer.from('</one>') ]);
+          expect(Promise.resolve(streamToPromise(streamify([chunk1, chunk2])
+            .pipe(xmlChunker.apply(null, [ 'one' ]))
+            .pipe(through2.obj((c, e, callback) => callback(null, c.toString()))))))
+            .to.eventually.deep.equal([ '<one>æ</one>' ])
+            .notify(done);
         });
 
         it('should pass on elements embedded inside the specified tags', function(done) {
